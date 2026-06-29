@@ -1712,6 +1712,68 @@ a {
   width: 0%;
 }
 
+/* Dashboard Nav Styles */
+.dashboard-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-left: 2rem;
+}
+.dashboard-nav-link {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+}
+.dashboard-nav-link:hover {
+  color: var(--text-primary);
+}
+.dashboard-nav-link.active {
+  color: var(--primary-light);
+  border-bottom: 2px solid var(--primary-light);
+}
+.dashboard-menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 0.5rem;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-mobile-nav {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.5rem;
+  flex-direction: column;
+  gap: 1rem;
+  z-index: 100;
+}
+@media (max-width: 768px) {
+  .dashboard-nav {
+    display: none;
+  }
+  .dashboard-menu-toggle {
+    display: flex;
+  }
+  .dashboard-mobile-nav.open {
+    display: flex;
+  }
+}
+
 /* Responsive CSS */
 @media (max-width: 1024px) {
   .hero {

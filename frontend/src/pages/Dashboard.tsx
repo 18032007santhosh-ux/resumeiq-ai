@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
-import { useNavigate } from 'react-router-dom';
-import { LogOut, User, Sparkles, BarChart3, Clock, AlertCircle } from 'lucide-react';
+import { useNavigate, Link } from 'react-router-dom';
+import { LogOut, User, Sparkles, BarChart3, Clock, AlertCircle, Menu, X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export const Dashboard: React.FC = () => {
   const { user, logout } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await logout();
     showToast('Logged out successfully', 'success');
-    navigate('/login');
+    navigate('/');
   };
 
   return (
@@ -26,12 +27,26 @@ export const Dashboard: React.FC = () => {
       <header className="dashboard-header">
         <div className="dashboard-header-container">
           <div className="flex items-center">
-            <span className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ResumeIQ AI</span>
-            <span className="dashboard-badge">Dashboard</span>
+            <Link to="/" style={{ textDecoration: 'none' }}>
+              <span className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ResumeIQ AI</span>
+            </Link>
+            
+            {/* Desktop Navigation Links */}
+            <nav className="dashboard-nav">
+              <Link to="/" className="dashboard-nav-link">Home</Link>
+              <Link to="/dashboard" className="dashboard-nav-link active">Dashboard</Link>
+              <button 
+                type="button"
+                onClick={() => showToast('Profile settings page is under construction for Phase 3', 'info')}
+                className="dashboard-nav-link"
+              >
+                Profile
+              </button>
+            </nav>
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="dashboard-user-badge">
+            <div className="dashboard-user-badge" style={{ display: 'flex' }}>
               <User className="w-4 h-4 text-indigo-400" />
               <span>{user?.name}</span>
             </div>
@@ -39,11 +54,48 @@ export const Dashboard: React.FC = () => {
             <button 
               onClick={handleLogout}
               className="dashboard-logout-btn"
+              style={{ display: 'flex' }}
             >
               <LogOut className="w-4 h-4" />
-              Logout
+              <span className="hidden sm:inline">Logout</span>
+            </button>
+
+            {/* Mobile Hamburger Toggle */}
+            <button 
+              className="dashboard-menu-toggle"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle Menu"
+            >
+              {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
+        </div>
+
+        {/* Mobile Navigation Drawer */}
+        <div className={`dashboard-mobile-nav ${menuOpen ? 'open' : ''}`}>
+          <Link to="/" className="dashboard-nav-link" onClick={() => setMenuOpen(false)}>Home</Link>
+          <Link to="/dashboard" className="dashboard-nav-link active" onClick={() => setMenuOpen(false)}>Dashboard</Link>
+          <button 
+            type="button"
+            onClick={() => {
+              setMenuOpen(false);
+              showToast('Profile settings page is under construction for Phase 3', 'info');
+            }}
+            className="dashboard-nav-link"
+            style={{ textAlign: 'left', width: '100%' }}
+          >
+            Profile
+          </button>
+          <button 
+            onClick={() => {
+              setMenuOpen(false);
+              handleLogout();
+            }}
+            className="dashboard-nav-link"
+            style={{ textAlign: 'left', width: '100%', color: '#f87171' }}
+          >
+            Logout
+          </button>
         </div>
       </header>
 
