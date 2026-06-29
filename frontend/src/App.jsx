@@ -12,6 +12,8 @@ import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
 import { NotFound } from './pages/NotFound';
+import { Terms } from './pages/Terms';
+import { Privacy } from './pages/Privacy';
 
 function App() {
   return (
@@ -65,6 +67,10 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+
+            {/* Static pages */}
+            <Route path="/terms" element={<Terms />} />
+            <Route path="/privacy" element={<Privacy />} />
 
             {/* Fallback 404 Route */}
             <Route path="*" element={<NotFound />} />
