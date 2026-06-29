@@ -5,33 +5,33 @@ import { SectionTitle } from './SectionTitle';
 export const HowItWorks: React.FC = () => {
   const steps = [
     {
-      num: '01',
+      num: '1️⃣',
       icon: <UploadCloud size={32} />,
       title: 'Upload Resume',
       desc: 'Drag & drop your current resume PDF or Word file in seconds.'
     },
     {
-      num: '02',
+      num: '2️⃣',
       icon: <Cpu size={32} />,
-      title: 'AI Analysis',
-      desc: 'Our neural networks scan for parsing failures, keywords, and density.'
+      title: 'AI Extracts Data',
+      desc: 'Our neural networks parse and extract key credentials from your document.'
     },
     {
-      num: '03',
+      num: '3️⃣',
       icon: <Sparkles size={32} />,
-      title: 'Improve Resume',
-      desc: 'Apply tailor-made recommendations to patch critical issues.'
+      title: 'ATS Analysis',
+      desc: 'ResumeIQ compares your resume structure and keywords against top job profiles.'
     },
     {
-      num: '04',
+      num: '4️⃣',
       icon: <Download size={32} />,
-      title: 'Download Better Resume',
-      desc: 'Export your highly-optimized, high-scoring ATS-ready document.'
+      title: 'Improve Resume',
+      desc: 'Apply tailor-made AI suggestions to output a high-scoring ATS-ready document.'
     }
   ];
 
   return (
-    <section className="how-it-works" id="how-it-works">
+    <section className="how-it-works" id="how-it-works" data-aos="fade-up" data-aos-duration="1000">
       <SectionTitle 
         badge="Workflow"
         title="Four Simple Steps to Success"
@@ -40,7 +40,7 @@ export const HowItWorks: React.FC = () => {
       
       <div className="steps-container">
         {steps.map((step, index) => (
-          <div key={index} className="step-wrapper">
+          <div key={index} className="step-wrapper" data-aos="fade-up" data-aos-delay={index * 150} data-aos-duration="800">
             <div className="step-card">
               <div className="step-num">{step.num}</div>
               <div className="step-icon-container">

@@ -6,31 +6,34 @@ import { Card } from './Card';
 export const Hero: React.FC = () => {
   return (
     <header className="hero" id="hero">
-      <div className="hero-content">
-        <div className="badge">
-          <Sparkles size={14} style={{ marginRight: '0.25rem' }} /> Powered by ResumeIQ AI Engine v2.0
+      <div className="hero-content" data-aos="fade-right" data-aos-duration="1000">
+        <div className="trust-badge-wrapper">
+          <div className="trust-badge">
+            <span className="badge-text">⭐ AI Powered ATS Resume Analyzer</span>
+          </div>
+          <span className="trust-sub">Trusted by Students & Job Seekers</span>
         </div>
         <h1 className="hero-title">
-          Optimize Your <span>Resume with AI</span>
+          AI Resume <span>Analyzer</span>
         </h1>
         <p className="hero-desc">
           Get past Applicant Tracking Systems (ATS) and secure more interviews. ResumeIQ AI scans formatting, matching, and keywords, giving you actionable steps in seconds.
         </p>
         <div className="hero-cta">
           <a href="#demo-preview">
-            <Button variant="primary">
-              Upload Resume <UploadCloud size={18} />
+            <Button variant="primary" className="btn-large animate-pulse-glow">
+              Analyze My Resume <UploadCloud size={20} style={{ marginLeft: '0.25rem' }} />
             </Button>
           </a>
           <a href="#demo-preview">
-            <Button variant="secondary">
+            <Button variant="secondary" className="btn-large">
               Try Demo <Play size={16} />
             </Button>
           </a>
         </div>
       </div>
 
-      <div className="demo-card">
+      <div className="demo-card" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
         {/* Floating Mini Dashboard Cards to represent visual illustration */}
         <div className="floating-card-container">
           <Card className="floating-dashboard-widget main-widget">

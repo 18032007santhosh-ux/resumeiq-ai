@@ -1254,6 +1254,153 @@ a {
   color: var(--primary-light);
 }
 
+/* Trust Badge in Hero */
+.trust-badge-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(99, 102, 241, 0.1);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+}
+.badge-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-light);
+  letter-spacing: 0.05em;
+}
+.trust-sub {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Button & UI Scaling */
+.btn-large {
+  padding: 1rem 2.25rem;
+  font-size: 1.1rem;
+}
+.btn:hover {
+  transform: scale(1.05) translateY(-2px) !important;
+}
+.animate-pulse-glow {
+  animation: pulseGlow 2s infinite alternate;
+}
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(99, 102, 241, 0.8);
+  }
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  background: rgba(13, 17, 34, 0.4);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(99, 102, 241, 0.4);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+}
+.stat-value {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-light), var(--secondary-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-heading);
+}
+.stat-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* Background Subtle Glows */
+.glow-subtle-1 {
+  background: radial-gradient(circle, var(--secondary-light) 0%, transparent 60%);
+  top: 35% !important;
+  left: -15% !important;
+  opacity: 0.15 !important;
+  width: 700px;
+  height: 700px;
+}
+.glow-subtle-2 {
+  background: radial-gradient(circle, var(--accent-light) 0%, transparent 60%);
+  bottom: 25% !important;
+  left: 75% !important;
+  opacity: 0.15 !important;
+  width: 700px;
+  height: 700px;
+}
+
+/* Feature & Step Card Hover Effects */
+.card, .step-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card:hover, .step-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(99, 102, 241, 0.15);
+}
+.card:hover svg, .step-card:hover svg {
+  transform: scale(1.15);
+  transition: transform 0.3s ease;
+}
+
+/* Custom Skill Pill classes */
+.skill-pill {
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.skill-pill.matched {
+  background: rgba(20, 184, 166, 0.15);
+  color: #14b8a6;
+  border: 1px solid rgba(20, 184, 166, 0.3);
+}
+.skill-pill.missing-pill {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* Custom upload box hover effect */
+.upload-container:hover {
+  border-color: var(--primary-light) !important;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.3);
+}
+
 /* Responsive CSS */
 @media (max-width: 1024px) {
   .hero {
@@ -1269,6 +1416,11 @@ a {
   
   .hero-cta {
     justify-content: center;
+  }
+
+  .trust-badge-wrapper {
+    align-items: center;
+    text-align: center;
   }
   
   .floating-card-container {
@@ -1300,6 +1452,10 @@ a {
   
   .sidebar-menu {
     flex-direction: row;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
@@ -1339,12 +1495,26 @@ a {
   .footer-links-group {
     gap: 3rem;
   }
+
+  .stats-section {
+    padding: 3rem 1.5rem;
+  }
+
+  .btn-large {
+    width: 100%;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 480px) {
+  .hero {
+    padding-top: 8rem;
+  }
+
   .hero-cta {
     flex-direction: column;
     align-items: stretch;
+    gap: 1rem;
   }
   
   .companies-grid {
@@ -1364,5 +1534,9 @@ a {
   .sidebar-menu li {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
 }
