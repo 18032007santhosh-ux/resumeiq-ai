@@ -85,8 +85,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         return { success: false, message: data.message || 'Invalid credentials' };
       }
-    } catch (err) {
-      return { success: false, message: 'Server connection failed' };
+    } catch (err: any) {
+      console.error('Frontend Login Error:', err);
+      return { success: false, message: `Server connection failed: ${err.message || err}` };
     }
   };
 
@@ -108,8 +109,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } else {
         return { success: false, message: data.message || 'Registration failed' };
       }
-    } catch (err) {
-      return { success: false, message: 'Server connection failed' };
+    } catch (err: any) {
+      console.error('Frontend Register Error:', err);
+      return { success: false, message: `Server connection failed: ${err.message || err}` };
     }
   };
 
@@ -135,8 +137,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       return { success: res.ok, message: data.message || 'Reset link requested' };
-    } catch (err) {
-      return { success: false, message: 'Server connection failed' };
+    } catch (err: any) {
+      console.error('Frontend ForgotPassword Error:', err);
+      return { success: false, message: `Server connection failed: ${err.message || err}` };
     }
   };
 
@@ -149,8 +152,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
       const data = await res.json();
       return { success: res.ok, message: data.message || 'Password reset succeeded' };
-    } catch (err) {
-      return { success: false, message: 'Server connection failed' };
+    } catch (err: any) {
+      console.error('Frontend ResetPassword Error:', err);
+      return { success: false, message: `Server connection failed: ${err.message || err}` };
     }
   };
 
