@@ -34,7 +34,7 @@ const register = async (req, res, next) => {
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
-    res.status(214 || 201).json({
+    res.status(201).json({
       status: 'success',
       message: 'Registration successful',
       token,

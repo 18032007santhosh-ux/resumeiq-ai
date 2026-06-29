@@ -9,8 +9,25 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Enable CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://resumeiq-ai-opal.vercel.app'
+];
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps, curl, postman)
+    if (!origin) return callback(null, true);
+    
+    // Normalize origin by removing trailing slash
+    const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+    
+    if (allowedOrigins.includes(normalizedOrigin) || normalizedOrigin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    return callback(new Error('Not allowed by CORS'));
+  },
   credentials: true
 }));
 
