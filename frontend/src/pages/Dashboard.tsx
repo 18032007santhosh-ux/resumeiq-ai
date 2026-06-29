@@ -26,24 +26,22 @@ export const Dashboard: React.FC = () => {
       {/* Navigation Header */}
       <header className="dashboard-header">
         <div className="dashboard-header-container">
-          <div className="flex items-center">
-            <Link to="/" style={{ textDecoration: 'none' }}>
-              <span className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ResumeIQ AI</span>
-            </Link>
-            
-            {/* Desktop Navigation Links */}
-            <nav className="dashboard-nav">
-              <Link to="/" className="dashboard-nav-link">Home</Link>
-              <Link to="/dashboard" className="dashboard-nav-link active">Dashboard</Link>
-              <button 
-                type="button"
-                onClick={() => showToast('Profile settings page is under construction for Phase 3', 'info')}
-                className="dashboard-nav-link"
-              >
-                Profile
-              </button>
-            </nav>
-          </div>
+          <Link to="/" style={{ textDecoration: 'none' }}>
+            <span className="text-xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ResumeIQ AI</span>
+          </Link>
+          
+          {/* Desktop Navigation Links */}
+          <nav className="dashboard-nav">
+            <Link to="/" className="dashboard-nav-link">Home</Link>
+            <Link to="/dashboard" className="dashboard-nav-link active">Dashboard</Link>
+            <button 
+              type="button"
+              onClick={() => showToast('Profile settings page is under construction for Phase 3', 'info')}
+              className="dashboard-nav-link"
+            >
+              Profile
+            </button>
+          </nav>
 
           <div className="flex items-center gap-4">
             <div className="dashboard-user-badge" style={{ display: 'flex' }}>
