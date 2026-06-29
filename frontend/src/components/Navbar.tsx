@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Brain } from 'lucide-react';
 import { Button } from './Button';
 
@@ -31,8 +32,12 @@ export const Navbar: React.FC = () => {
         <li><a href="#faq">FAQ</a></li>
       </ul>
       <div className="nav-actions">
-        <Button variant="secondary" className="mr-4">Login</Button>
-        <Button variant="primary">Get Started</Button>
+        <Link to="/login" style={{ display: 'inline-block' }}>
+          <Button variant="secondary" className="mr-4">Login</Button>
+        </Link>
+        <Link to="/register" style={{ display: 'inline-block' }}>
+          <Button variant="primary">Get Started</Button>
+        </Link>
       </div>
     </nav>
   );
