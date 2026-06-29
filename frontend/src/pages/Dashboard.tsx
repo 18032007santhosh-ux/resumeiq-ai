@@ -100,7 +100,7 @@ export const Dashboard: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="dashboard-container">
+      <main className="dashboard-page-container">
         <motion.div 
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
