@@ -1,49 +1,28 @@
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 
-// In-memory user database placeholder
-const users = [];
-
-// Pre-fill a demo user
-const initDemoUser = async () => {
-  const hashedPassword = await bcrypt.hash('Password123!', 10);
-  users.push({
-    id: 'demo-user-id',
-    name: 'Santhosh Kumar',
-    email: 'user@example.com',
-    password: hashedPassword,
-    createdAt: new Date()
-  });
-  console.log('👥 In-memory demo user created: user@example.com / Password123!');
-};
-
-initDemoUser();
-
 const findByEmail = async (email) => {
-  return users.find(user => user.email.toLowerCase() === email.toLowerCase());
+  return await User.findOne({ email: email.toLowerCase() });
 };
 
 const findById = async (id) => {
-  return users.find(user => user.id === id);
+  return await User.findById(id);
 };
 
 const createUser = async (userData) => {
   const hashedPassword = await bcrypt.hash(userData.password, 10);
-  const newUser = {
-    id: `user-${Date.now()}`,
-    name: userData.name,
-    email: userData.email,
+  return await User.create({
+    fullName: userData.fullName || userData.name,
+    email: userData.email.toLowerCase(),
     password: hashedPassword,
-    createdAt: new Date()
-  };
-  users.push(newUser);
-  return newUser;
+    avatar: userData.avatar || ''
+  });
 };
 
 const updateUserPassword = async (userId, newPassword) => {
-  const user = await findById(userId);
-  if (!user) return false;
-  user.password = await bcrypt.hash(newPassword, 10);
-  return true;
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+  const result = await User.findByIdAndUpdate(userId, { password: hashedPassword });
+  return !!result;
 };
 
 // Store reset tokens temporarily

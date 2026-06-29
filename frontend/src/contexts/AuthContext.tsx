@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+import api from '../services/api';
 
 export interface User {
   id: string;
@@ -20,10 +21,6 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5000/api/auth'
-  : 'https://resumeiq-ai-cyij.onrender.com/api/auth';
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -39,26 +36,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setToken(storedToken);
         setUser(JSON.parse(storedUser));
         
-        // Optionally verify token validity with backend
         try {
-          const res = await fetch(`${API_URL}/me`, {
-            headers: {
-              'Authorization': `Bearer ${storedToken}`
-            }
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setUser(data.user);
-            localStorage.setItem('user', JSON.stringify(data.user));
+          const res = await api.get('/auth/me');
+          if (res.data && res.data.status === 'success') {
+            const fetchedUser = res.data.user;
+            setUser(fetchedUser);
+            localStorage.setItem('user', JSON.stringify(fetchedUser));
           } else {
-            // Token expired or invalid
-            localStorage.removeItem('token');
-            localStorage.removeItem('user');
-            setToken(null);
-            setUser(null);
+            // Unexpected response structure
+            logout();
           }
         } catch (err) {
           console.error('Auth verification failed', err);
+          // If error is 401, Axios interceptor will clean storage, but let's be safe
+          if (axiosErrorStatus(err) === 401) {
+            setToken(null);
+            setUser(null);
+          }
         }
       }
       setLoading(false);
@@ -67,16 +61,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     initializeAuth();
   }, []);
 
+  const axiosErrorStatus = (err: any) => {
+    return err.response?.status;
+  };
+
   const login = async (email: string, password: string) => {
     try {
-      const res = await fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-      const data = await res.json();
+      const res = await api.post('/auth/login', { email, password });
+      const data = res.data;
 
-      if (res.ok) {
+      if (data.status === 'success') {
         setToken(data.token);
         setUser(data.user);
         localStorage.setItem('token', data.token);
@@ -87,20 +81,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (err: any) {
       console.error('Frontend Login Error:', err);
-      return { success: false, message: `Server connection failed: ${err.message || err}` };
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
     }
   };
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      const res = await fetch(`${API_URL}/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password })
-      });
-      const data = await res.json();
+      const res = await api.post('/auth/register', { name, email, password });
+      const data = res.data;
 
-      if (res.ok) {
+      if (data.status === 'success') {
         setToken(data.token);
         setUser(data.user);
         localStorage.setItem('token', data.token);
@@ -111,13 +102,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     } catch (err: any) {
       console.error('Frontend Register Error:', err);
-      return { success: false, message: `Server connection failed: ${err.message || err}` };
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
     }
   };
 
   const logout = async () => {
     try {
-      await fetch(`${API_URL}/logout`, { method: 'POST' });
+      await api.post('/auth/logout');
     } catch (err) {
       console.error('Logout request failed', err);
     } finally {
@@ -130,31 +122,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const forgotPassword = async (email: string) => {
     try {
-      const res = await fetch(`${API_URL}/forgot-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
-      const data = await res.json();
-      return { success: res.ok, message: data.message || 'Reset link requested' };
+      const res = await api.post('/auth/forgot-password', { email });
+      const data = res.data;
+      return { success: data.status === 'success', message: data.message || 'Reset link requested' };
     } catch (err: any) {
       console.error('Frontend ForgotPassword Error:', err);
-      return { success: false, message: `Server connection failed: ${err.message || err}` };
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
     }
   };
 
   const resetPassword = async (password: string, token: string) => {
     try {
-      const res = await fetch(`${API_URL}/reset-password`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password, token })
-      });
-      const data = await res.json();
-      return { success: res.ok, message: data.message || 'Password reset succeeded' };
+      const res = await api.post('/auth/reset-password', { password, token });
+      const data = res.data;
+      return { success: data.status === 'success', message: data.message || 'Password reset succeeded' };
     } catch (err: any) {
       console.error('Frontend ResetPassword Error:', err);
-      return { success: false, message: `Server connection failed: ${err.message || err}` };
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
     }
   };
 
