@@ -15,9 +15,21 @@ const ResumeSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please add the original file name'],
   },
+  storedFileName: {
+    type: String,
+    required: [true, 'Please add the stored file name'],
+  },
+  fileSize: {
+    type: Number,
+    required: [true, 'Please add the file size'],
+  },
   fileType: {
     type: String,
     default: '',
+  },
+  storagePath: {
+    type: String,
+    required: [true, 'Please add the storage path'],
   },
   uploadDate: {
     type: Date,
@@ -39,6 +51,6 @@ const ResumeSchema = new mongoose.Schema({
     type: Object,
     default: null,
   },
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Resume', ResumeSchema);

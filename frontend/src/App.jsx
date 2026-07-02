@@ -11,6 +11,8 @@ import { Register } from './pages/Register';
 import { ForgotPassword } from './pages/ForgotPassword';
 import { ResetPassword } from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
+import { Resumes } from './pages/Resumes';
+import { ResumeDetail } from './pages/ResumeDetail';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -64,6 +66,22 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/resumes" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Resumes />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/resumes/:id" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <ResumeDetail />
                 </ProtectedRoute>
               } 
             />

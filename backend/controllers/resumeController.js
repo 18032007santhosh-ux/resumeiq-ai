@@ -1,7 +1,9 @@
 const Resume = require('../models/Resume');
+const fs = require('fs');
+const path = require('path');
 
 // @desc    Create resume metadata
-// @route   POST /api/resume
+// @route   POST /api/resumes
 // @access  Private
 const createResume = async (req, res, next) => {
   try {
@@ -30,8 +32,41 @@ const createResume = async (req, res, next) => {
   }
 };
 
+// @desc    Upload resume file and create metadata
+// @route   POST /api/resumes/upload
+// @access  Private
+const uploadResume = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please upload a file',
+      });
+    }
+
+    const { originalname, filename, size, mimetype, path: filePath } = req.file;
+
+    const resume = await Resume.create({
+      userId: req.user.id,
+      resumeTitle: originalname, // Default title to original filename
+      originalFileName: originalname,
+      storedFileName: filename,
+      fileSize: size,
+      fileType: mimetype,
+      storagePath: filePath,
+    });
+
+    res.status(201).json({
+      status: 'success',
+      data: resume,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    List authenticated user's resumes
-// @route   GET /api/resume
+// @route   GET /api/resumes
 // @access  Private
 const getResumes = async (req, res, next) => {
   try {
@@ -48,7 +83,7 @@ const getResumes = async (req, res, next) => {
 };
 
 // @desc    Return one resume
-// @route   GET /api/resume/:id
+// @route   GET /api/resumes/:id
 // @access  Private
 const getResumeById = async (req, res, next) => {
   try {
@@ -71,7 +106,7 @@ const getResumeById = async (req, res, next) => {
 };
 
 // @desc    Update resume metadata
-// @route   PUT /api/resume/:id
+// @route   PUT /api/resumes/:id
 // @access  Private
 const updateResume = async (req, res, next) => {
   try {
@@ -106,8 +141,8 @@ const updateResume = async (req, res, next) => {
   }
 };
 
-// @desc    Delete resume metadata
-// @route   DELETE /api/resume/:id
+// @desc    Delete resume metadata and file
+// @route   DELETE /api/resumes/:id
 // @access  Private
 const deleteResume = async (req, res, next) => {
   try {
@@ -120,11 +155,20 @@ const deleteResume = async (req, res, next) => {
       });
     }
 
+    // Try to delete physical file
+    if (resume.storagePath) {
+      fs.unlink(resume.storagePath, (err) => {
+        if (err) {
+          console.error(`Failed to delete file: ${resume.storagePath}`, err);
+        }
+      });
+    }
+
     await Resume.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       status: 'success',
-      message: 'Resume metadata deleted successfully',
+      message: 'Resume deleted successfully',
     });
   } catch (error) {
     next(error);
@@ -133,6 +177,7 @@ const deleteResume = async (req, res, next) => {
 
 module.exports = {
   createResume,
+  uploadResume,
   getResumes,
   getResumeById,
   updateResume,

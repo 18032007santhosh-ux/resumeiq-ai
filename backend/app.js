@@ -33,7 +33,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Register routes
 app.use('/api/auth', authRoutes);
-app.use('/api/resume', resumeRoutes);
+app.use('/api/resumes', resumeRoutes);
 app.use('/api/history', historyRoutes);
 
 // Health check endpoint
