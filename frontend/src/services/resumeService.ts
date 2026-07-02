@@ -26,3 +26,8 @@ export const deleteResume = async (id: string) => {
   const response = await api.delete(`/resumes/${id}`);
   return response.data;
 };
+
+export const parseResume = async (id: string) => {
+  const response = await api.post(`/resume/parse/${id}`);
+  return response.data;
+};

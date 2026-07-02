@@ -39,6 +39,15 @@ const ResumeSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  rawText: {
+    type: String,
+    default: '',
+  },
+  parsingStatus: {
+    type: String,
+    enum: ['Uploaded', 'Parsing', 'Parsed Successfully', 'Parsing Failed'],
+    default: 'Uploaded',
+  },
   parsedData: {
     type: Object,
     default: {},

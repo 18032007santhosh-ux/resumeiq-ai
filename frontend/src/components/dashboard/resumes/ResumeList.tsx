@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getResumes, deleteResume } from '../../../services/resumeService';
-import { FileText, Trash2, Eye, Calendar, HardDrive, AlertCircle } from 'lucide-react';
+import { FileText, Trash2, Eye, Calendar, HardDrive, AlertCircle, CheckCircle2, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '../../../contexts/ToastContext';
 
@@ -101,6 +101,16 @@ export const ResumeList: React.FC<ResumeListProps> = ({ refreshTrigger }) => {
                     <span className="flex items-center gap-1.5">
                       <HardDrive className="w-4 h-4" />
                       {formatFileSize(resume.fileSize)}
+                    </span>
+                    <span className={`flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full text-xs font-medium border ${
+                      resume.parsingStatus === 'Parsed Successfully' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
+                      resume.parsingStatus === 'Parsing Failed' ? 'bg-red-500/10 text-red-400 border-red-500/20' :
+                      'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                    }`}>
+                      {resume.parsingStatus === 'Parsed Successfully' ? <CheckCircle2 className="w-3 h-3" /> :
+                       resume.parsingStatus === 'Parsing Failed' ? <AlertCircle className="w-3 h-3" /> :
+                       <Clock className="w-3 h-3" />}
+                      {resume.parsingStatus || 'Uploaded'}
                     </span>
                   </div>
                 </div>
