@@ -13,6 +13,8 @@ import { ResetPassword } from './pages/ResetPassword';
 import { Dashboard } from './pages/Dashboard';
 import { Resumes } from './pages/Resumes';
 import { ResumeDetail } from './pages/ResumeDetail';
+import { History } from './pages/History';
+import { Settings } from './pages/Settings';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -82,6 +84,22 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <ResumeDetail />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/history" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <History />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/settings" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Settings />
                 </ProtectedRoute>
               } 
             />
