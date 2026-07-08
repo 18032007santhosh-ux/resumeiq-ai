@@ -15,6 +15,7 @@ import { Resumes } from './pages/Resumes';
 import { ResumeDetail } from './pages/ResumeDetail';
 import { History } from './pages/History';
 import { Settings } from './pages/Settings';
+import Results from './pages/dashboard/Results';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -100,6 +101,14 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/results/:id" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Results />
                 </ProtectedRoute>
               } 
             />

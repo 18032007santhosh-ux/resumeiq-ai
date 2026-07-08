@@ -6,7 +6,7 @@ import { getResumeById, parseResume } from '../services/resumeService';
 import { 
   FileText, ArrowLeft, Calendar, HardDrive, CheckCircle2, 
   Clock, User, Mail, Phone, MapPin, Globe,
-  Briefcase, GraduationCap, Award, Languages, Terminal, ChevronDown, ChevronUp
+  Briefcase, GraduationCap, Award, Languages, Terminal, ChevronDown, ChevronUp, Target
 } from 'lucide-react';
 
 const LinkedinIcon = ({ className }: { className?: string }) => (
@@ -235,6 +235,17 @@ export const ResumeDetail: React.FC = () => {
                 {resume.parsingStatus === 'Parsed Successfully' && !parsing && resume.parsedData && (
                   <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     
+                    {/* Action Bar */}
+                    <div className="flex justify-end">
+                      <Link 
+                        to={`/dashboard/results/${resume._id}`}
+                        className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white px-5 py-2.5 rounded-xl font-medium shadow-lg hover:shadow-indigo-500/25 transition-all"
+                      >
+                        <Target className="w-5 h-5" />
+                        Get ATS Score
+                      </Link>
+                    </div>
+
                     {/* Personal Information */}
                     <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 lg:p-8">
                       <h3 className="text-lg font-semibold text-white mb-6 flex items-center gap-2">

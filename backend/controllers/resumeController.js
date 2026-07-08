@@ -1,4 +1,6 @@
 const Resume = require('../models/Resume');
+const ResumeAnalysis = require('../models/ResumeAnalysis');
+const atsEngine = require('../services/atsEngine/scoreAggregator');
 const fs = require('fs');
 const path = require('path');
 
@@ -175,6 +177,52 @@ const deleteResume = async (req, res, next) => {
   }
 };
 
+// @desc    Analyze resume using ATS engine
+// @route   POST /api/resumes/analyze/:id
+// @access  Private
+const analyzeResume = async (req, res, next) => {
+  try {
+    const resume = await Resume.findOne({ _id: req.params.id, userId: req.user.id });
+
+    if (!resume) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Resume not found or not authorized to access',
+      });
+    }
+
+    if (!resume.parsedData) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Resume has not been parsed yet. Please parse it first.',
+      });
+    }
+
+    // Run ATS Engine
+    const analysisResult = atsEngine.analyze(resume.parsedData);
+
+    // Save to Database
+    const resumeAnalysis = await ResumeAnalysis.findOneAndUpdate(
+      { userId: req.user.id, resumeId: resume._id },
+      {
+        overallScore: analysisResult.score,
+        breakdown: analysisResult.breakdown,
+        strengths: analysisResult.strengths,
+        improvements: analysisResult.improvements,
+        issues: analysisResult.issues
+      },
+      { new: true, upsert: true }
+    );
+
+    res.status(200).json({
+      status: 'success',
+      data: resumeAnalysis,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createResume,
   uploadResume,
@@ -182,4 +230,5 @@ module.exports = {
   getResumeById,
   updateResume,
   deleteResume,
+  analyzeResume,
 };

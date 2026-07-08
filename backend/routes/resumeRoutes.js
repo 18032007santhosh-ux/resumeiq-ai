@@ -19,4 +19,7 @@ router.route('/:id')
   .put(resumeController.updateResume)
   .delete(resumeController.deleteResume);
 
+router.route('/analyze/:id')
+  .post(resumeController.analyzeResume);
+
 module.exports = router;
