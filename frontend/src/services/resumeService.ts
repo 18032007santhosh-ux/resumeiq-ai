@@ -31,3 +31,9 @@ export const parseResume = async (id: string) => {
   const response = await api.post(`/resume/parse/${id}`);
   return response.data;
 };
+
+export const getAiSuggestions = async (resumeId: string) => {
+  const response = await api.post('/analysis/suggestions', { resumeId });
+  return response.data;
+};
+

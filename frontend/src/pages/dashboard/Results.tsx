@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import AtsScoreRing from '../../components/dashboard/AtsScoreRing';
 import CategoryBreakdown from '../../components/dashboard/CategoryBreakdown';
 import FeedbackList from '../../components/dashboard/FeedbackList';
+import { AiSuggestionsSection } from '../../components/dashboard/AiSuggestionsSection';
 
 const Results: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -79,7 +80,7 @@ const Results: React.FC = () => {
   if (!analysis) return null;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-fade-in print-container">
+    <div className="max-w-6xl mx-auto space-y-8 animate-fade-in print-container pb-12">
       {/* Header */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 no-print">
         <div>
@@ -169,6 +170,13 @@ const Results: React.FC = () => {
 
         </div>
       </div>
+
+      {/* AI Resume Suggestions Section */}
+      {id && (
+        <div className="no-print pt-4 border-t border-slate-800/60">
+          <AiSuggestionsSection resumeId={id} />
+        </div>
+      )}
     </div>
   );
 };

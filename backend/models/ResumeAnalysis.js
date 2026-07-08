@@ -36,6 +36,14 @@ const ResumeAnalysisSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  suggestions: {
+    type: Object,
+    default: null,
+  },
+  suggestionsGeneratedAt: {
+    type: Date,
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,
