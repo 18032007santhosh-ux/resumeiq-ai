@@ -16,6 +16,9 @@ import { ResumeDetail } from './pages/ResumeDetail';
 import { History } from './pages/History';
 import { Settings } from './pages/Settings';
 import { JobMatch } from './pages/JobMatch';
+import { Interview } from './pages/Interview';
+import { InterviewHistory } from './pages/InterviewHistory';
+import { InterviewResult } from './pages/InterviewResult';
 import Results from './pages/dashboard/Results';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
@@ -98,6 +101,30 @@ function App() {
               } 
             />
             <Route 
+              path="/interview" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Interview />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/interview/history" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <InterviewHistory />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/interview/result/:id" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <InterviewResult />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/dashboard/history" 
               element={
                 <ProtectedRoute requireAuth={true}>
@@ -137,3 +164,4 @@ function App() {
 }
 
 export default App;
+

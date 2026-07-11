@@ -8,6 +8,7 @@ const historyRoutes = require('./routes/historyRoutes');
 const parserRoutes = require('./routes/parserRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
 const jobMatcherRoutes = require('./routes/jobMatcherRoutes');
+const interviewRoutes = require('./routes/interviewRoutes');
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use('/api/history', historyRoutes);
 app.use('/api/resume', parserRoutes);
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/job', jobMatcherRoutes);
+app.use('/api/interview', interviewRoutes);
+
 
 
 // Health check endpoint

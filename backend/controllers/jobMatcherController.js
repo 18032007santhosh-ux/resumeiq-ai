@@ -72,6 +72,23 @@ const matchJobDescription = async (req, res, next) => {
   }
 };
 
-module.exports = {
-  matchJobDescription
+const getJobMatches = async (req, res, next) => {
+  try {
+    const matches = await JobMatch.find({ userId: req.user.id })
+      .populate('resumeId', 'resumeTitle')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      status: 'success',
+      data: matches,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
+
+module.exports = {
+  matchJobDescription,
+  getJobMatches,
+};
+

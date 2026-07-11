@@ -7,5 +7,7 @@ const { protect } = require('../middleware/authMiddleware');
 router.use(protect);
 
 router.post('/match', jobMatcherController.matchJobDescription);
+router.get('/', jobMatcherController.getJobMatches);
 
 module.exports = router;
+

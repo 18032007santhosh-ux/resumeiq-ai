@@ -5,6 +5,7 @@ import { Hero } from '../components/dashboard/Hero';
 import { StatsCards } from '../components/dashboard/StatsCards';
 import { UploadCard } from '../components/dashboard/UploadCard';
 import { RecentAnalyses } from '../components/dashboard/RecentAnalyses';
+import { MockInterviewsCard } from '../components/dashboard/MockInterviewsCard';
 import { CareerTip } from '../components/dashboard/CareerTip';
 import { FutureFeatures } from '../components/dashboard/FutureFeatures';
 
@@ -36,6 +37,7 @@ export const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <UploadCard />
               <RecentAnalyses />
+              <MockInterviewsCard />
               
               {/* Career Tip spans both columns on large screens */}
               <CareerTip />
@@ -49,3 +51,4 @@ export const Dashboard: React.FC = () => {
     </div>
   );
 };
+

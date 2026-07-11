@@ -40,3 +40,8 @@ export const matchJobDescription = async (resumeId: string, jobDescription: stri
   const response = await api.post('/job/match', { resumeId, jobDescription });
   return response.data;
 };
+export const getJobMatches = async () => {
+  const response = await api.get('/job');
+  return response.data;
+};
+
