@@ -1911,5 +1911,4 @@ a {
     grid-template-columns: 1fr;
   }
 }
-@ m e d i a   p r i n t   {   . n o - p r i n t   {   d i s p l a y :   n o n e   ! i m p o r t a n t ;   }   }  
- 
+@media print { .no-print { display: none !important; } }
