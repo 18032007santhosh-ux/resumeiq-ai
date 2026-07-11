@@ -15,6 +15,7 @@ import { Resumes } from './pages/Resumes';
 import { ResumeDetail } from './pages/ResumeDetail';
 import { History } from './pages/History';
 import { Settings } from './pages/Settings';
+import { JobMatch } from './pages/JobMatch';
 import Results from './pages/dashboard/Results';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
@@ -89,6 +90,14 @@ function App() {
               } 
             />
             <Route 
+              path="/job-match" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <JobMatch />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/dashboard/history" 
               element={
                 <ProtectedRoute requireAuth={true}>
@@ -112,6 +121,7 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+
 
             {/* Static pages */}
             <Route path="/terms" element={<Terms />} />

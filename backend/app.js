@@ -7,6 +7,7 @@ const resumeRoutes = require('./routes/resumeRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 const parserRoutes = require('./routes/parserRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
+const jobMatcherRoutes = require('./routes/jobMatcherRoutes');
 
 const app = express();
 
@@ -39,6 +40,8 @@ app.use('/api/resumes', resumeRoutes);
 app.use('/api/history', historyRoutes);
 app.use('/api/resume', parserRoutes);
 app.use('/api/analysis', analysisRoutes);
+app.use('/api/job', jobMatcherRoutes);
+
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

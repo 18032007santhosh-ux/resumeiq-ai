@@ -110,6 +110,69 @@ You MUST follow the schema. Do not write any markdown or HTML.`;
   }
 };
 
+/**
+ * Generate suggestions for matching a resume to a specific job description.
+ */
+const generateJobMatchSuggestions = async (parsedResume, jobDescription) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY environment variable is not set');
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  const prompt = `You are a professional ATS optimizer and career coach.
+Analyze the following resume and the provided Job Description to suggest improvements that will make the resume a better match for the job.
+
+Resume Data:
+${JSON.stringify(parsedResume, null, 2)}
+
+Job Description:
+${jobDescription}
+
+Based on this information, provide 3-5 highly specific, actionable, and concise recommendations (e.g., "Mention Docker experience if applicable." or "Highlight REST API projects.").
+You MUST follow the schema. Do not write any markdown or HTML.`;
+
+  let attempts = 0;
+  while (attempts < 2) {
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'OBJECT',
+            properties: {
+              recommendations: {
+                type: 'ARRAY',
+                items: { type: 'STRING' }
+              }
+            },
+            required: ['recommendations'],
+          }
+        }
+      });
+
+      const parsed = JSON.parse(response.text);
+      
+      if (!parsed.recommendations || !Array.isArray(parsed.recommendations)) {
+        throw new Error('Invalid JSON structure returned by Gemini API');
+      }
+
+      return parsed.recommendations;
+    } catch (error) {
+      attempts++;
+      console.error(`Attempt ${attempts} failed to generate job match suggestions:`, error.message);
+      if (attempts >= 2) {
+        throw error;
+      }
+    }
+  }
+};
+
 module.exports = {
   generateSuggestions,
+  generateJobMatchSuggestions,
 };
+

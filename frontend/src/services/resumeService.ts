@@ -36,4 +36,7 @@ export const getAiSuggestions = async (resumeId: string) => {
   const response = await api.post('/analysis/suggestions', { resumeId });
   return response.data;
 };
-
+export const matchJobDescription = async (resumeId: string, jobDescription: string) => {
+  const response = await api.post('/job/match', { resumeId, jobDescription });
+  return response.data;
+};

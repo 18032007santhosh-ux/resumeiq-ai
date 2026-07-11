@@ -1,5 +1,5 @@
 import React from 'react';
-import { LayoutDashboard, FileText, History, Settings, LogOut, X } from 'lucide-react';
+import { LayoutDashboard, FileText, History, Settings, LogOut, X, Briefcase } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { CareerProgress } from './CareerProgress';
@@ -16,9 +16,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'My Resumes', path: '/dashboard/resumes', icon: FileText },
+    { name: 'Job Matching', path: '/job-match', icon: Briefcase },
     { name: 'Analysis History', path: '/dashboard/history', icon: History },
     { name: 'Settings', path: '/dashboard/settings', icon: Settings },
   ];
+
 
   return (
     <>
