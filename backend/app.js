@@ -4,7 +4,7 @@ const cookieParser = require('cookie-parser');
 
 const authRoutes = require('./routes/authRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
-const historyRoutes = require('./routes/historyRoutes');
+const historyRoutes = require('./routes/history');
 const parserRoutes = require('./routes/parserRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
 const jobMatcherRoutes = require('./routes/jobMatcherRoutes');

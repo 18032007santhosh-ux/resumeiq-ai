@@ -101,6 +101,14 @@ function App() {
               } 
             />
             <Route 
+              path="/job-match/:id" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <JobMatch />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/interview" 
               element={
                 <ProtectedRoute requireAuth={true}>

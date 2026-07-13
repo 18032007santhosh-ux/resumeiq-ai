@@ -49,6 +49,17 @@ const matchJobDescription = async (req, res, next) => {
       ];
     }
 
+    // Extract job title from jobDescription: first line or fallback
+    let jobTitle = 'Job Match Analysis';
+    if (jobDescription) {
+      const firstLine = jobDescription.trim().split('\n')[0].trim();
+      if (firstLine && firstLine.length < 80) {
+        jobTitle = firstLine;
+      } else if (firstLine) {
+        jobTitle = firstLine.substring(0, 80) + '...';
+      }
+    }
+
     // Save to Database
     const jobMatch = await JobMatch.create({
       userId: req.user.id,
@@ -61,6 +72,8 @@ const matchJobDescription = async (req, res, next) => {
       matchedKeywords: scores.matchedKeywords,
       missingKeywords: scores.missingKeywords,
       recommendations,
+      jobTitle,
+      jobDescription,
     });
 
     res.status(200).json({

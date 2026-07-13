@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Sidebar } from '../components/dashboard/Sidebar';
 import { Navbar } from '../components/dashboard/Navbar';
 import { getResumes, matchJobDescription } from '../services/resumeService';
+import { getHistoryItem } from '../services/historyService';
 import { useToast } from '../contexts/ToastContext';
 import AtsScoreRing from '../components/dashboard/AtsScoreRing';
 import { Briefcase, AlertCircle, CheckCircle2, RefreshCw, XCircle } from 'lucide-react';
 
 export const JobMatch: React.FC = () => {
+  const { id } = useParams<{ id: string }>();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [resumes, setResumes] = useState<any[]>([]);
   const [selectedResumeId, setSelectedResumeId] = useState<string>('');
@@ -24,7 +27,8 @@ export const JobMatch: React.FC = () => {
         const res = await getResumes();
         const parsedResumes = res.data.filter((r: any) => r.parsingStatus === 'Parsed Successfully');
         setResumes(parsedResumes);
-        if (parsedResumes.length > 0) {
+        // Only default to first resume if we aren't loading a saved match
+        if (parsedResumes.length > 0 && !id) {
           setSelectedResumeId(parsedResumes[0]._id);
         }
       } catch (err: any) {
@@ -34,7 +38,38 @@ export const JobMatch: React.FC = () => {
       }
     };
     fetchResumes();
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    const fetchSavedMatch = async () => {
+      if (!id) {
+        setResults(null);
+        setJobDescription('');
+        return;
+      }
+      try {
+        setLoading(true);
+        const res = await getHistoryItem(id);
+        if (res.status === 'success' && res.type === 'jobMatch') {
+          setResults(res.data);
+          if (res.data.resumeId) {
+            setSelectedResumeId(res.data.resumeId._id || res.data.resumeId);
+          }
+          if (res.data.jobDescription) {
+            setJobDescription(res.data.jobDescription);
+          }
+        } else {
+          showToast('Failed to load job match details', 'error');
+        }
+      } catch (err: any) {
+        console.error(err);
+        showToast('Error loading job match details', 'error');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSavedMatch();
+  }, [id]);
 
   const handleAnalyze = async () => {
     if (!selectedResumeId) {

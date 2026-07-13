@@ -1,13 +1,11 @@
-const Analysis = require('../models/Analysis');
+const historyService = require('../services/historyService');
 
-// @desc    Get user's analysis history
+// @desc    Get user's analysis history timeline
 // @route   GET /api/history
 // @access  Private
 const getHistory = async (req, res, next) => {
   try {
-    const history = await Analysis.find({ userId: req.user.id })
-      .populate('resumeId', 'resumeTitle originalFileName')
-      .sort({ createdAt: -1 });
+    const history = await historyService.getUserHistory(req.user.id);
 
     res.status(200).json({
       status: 'success',
@@ -19,21 +17,43 @@ const getHistory = async (req, res, next) => {
   }
 };
 
+// @desc    Get a single history item detail report
+// @route   GET /api/history/:id
+// @access  Private
+const getHistoryItem = async (req, res, next) => {
+  try {
+    const result = await historyService.getUserHistoryItem(req.params.id, req.user.id);
+
+    if (!result) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'History record not found or not authorized',
+      });
+    }
+
+    res.status(200).json({
+      status: 'success',
+      type: result.type,
+      data: result.data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Delete analysis history record
 // @route   DELETE /api/history/:id
 // @access  Private
 const deleteHistory = async (req, res, next) => {
   try {
-    const record = await Analysis.findOne({ _id: req.params.id, userId: req.user.id });
+    const result = await historyService.deleteUserHistoryItem(req.params.id, req.user.id);
 
-    if (!record) {
+    if (!result) {
       return res.status(404).json({
         status: 'error',
         message: 'History record not found or not authorized to delete',
       });
     }
-
-    await Analysis.findByIdAndDelete(req.params.id);
 
     res.status(200).json({
       status: 'success',
@@ -46,5 +66,6 @@ const deleteHistory = async (req, res, next) => {
 
 module.exports = {
   getHistory,
+  getHistoryItem,
   deleteHistory,
 };

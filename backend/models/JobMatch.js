@@ -43,6 +43,13 @@ const JobMatchSchema = new mongoose.Schema({
     type: [String],
     default: [],
   },
+  jobTitle: {
+    type: String,
+    default: 'Job Match Analysis',
+  },
+  jobDescription: {
+    type: String,
+  },
 }, { timestamps: true });
 
 module.exports = mongoose.model('JobMatch', JobMatchSchema);

@@ -10,6 +10,7 @@ router.route('/')
   .get(historyController.getHistory);
 
 router.route('/:id')
+  .get(historyController.getHistoryItem)
   .delete(historyController.deleteHistory);
 
 module.exports = router;
