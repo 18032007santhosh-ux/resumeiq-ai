@@ -22,6 +22,8 @@ import { InterviewResult } from './pages/InterviewResult';
 import { Compare } from './pages/Compare';
 import Results from './pages/dashboard/Results';
 import { CareerCoach } from './pages/CareerCoach';
+import { CoverLetter } from './pages/CoverLetter';
+import { CoverLetterHistory } from './pages/CoverLetterHistory';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -171,6 +173,22 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <CareerCoach />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/cover-letter" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <CoverLetter />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/cover-letter/history" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <CoverLetterHistory />
                 </ProtectedRoute>
               } 
             />

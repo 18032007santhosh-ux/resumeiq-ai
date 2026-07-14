@@ -11,6 +11,7 @@ const jobMatcherRoutes = require('./routes/jobMatcherRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
 const comparisonRoutes = require('./routes/comparisonRoutes');
 const careerRoutes = require('./routes/careerRoutes');
+const coverLetterRoutes = require('./routes/coverLetterRoutes');
 
 const app = express();
 
@@ -47,6 +48,7 @@ app.use('/api/job', jobMatcherRoutes);
 app.use('/api/interview', interviewRoutes);
 app.use('/api/compare', comparisonRoutes);
 app.use('/api/career', careerRoutes);
+app.use('/api/cover-letter', coverLetterRoutes);
 
 
 

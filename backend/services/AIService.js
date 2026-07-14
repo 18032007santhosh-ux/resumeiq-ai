@@ -432,12 +432,110 @@ You MUST follow the schema. Do not write any markdown or HTML.`;
   }
 };
 
+/**
+ * Generate an AI cover letter.
+ */
+const generateCoverLetter = async ({
+  parsedResume,
+  atsAnalysis = null,
+  jobMatch = null,
+  company,
+  position,
+  hiringManager = '',
+  tone,
+  length,
+  jobDescription = '',
+}) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY environment variable is not set');
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  const lengthGuides = {
+    'Short': 'around 150-250 words, concise and direct',
+    'Medium': 'around 250-400 words, balanced and comprehensive',
+    'Long': 'around 400-600 words, highly detailed and narrative-driven',
+  };
+
+  const prompt = `You are a professional resume writer and career strategist. Write a cover letter for the candidate applying for:
+Role: ${position}
+Company: ${company}
+${hiringManager ? `Hiring Manager: ${hiringManager}` : ''}
+Tone: ${tone}
+Target Length: ${lengthGuides[length] || length}
+
+Use the candidate's parsed resume context:
+- Summary: ${parsedResume?.summary || 'None'}
+- Skills: ${Array.isArray(parsedResume?.skills) ? parsedResume.skills.join(', ') : 'None'}
+- Experience: ${JSON.stringify(parsedResume?.experience || [])}
+- Projects: ${JSON.stringify(parsedResume?.projects || [])}
+- Education: ${JSON.stringify(parsedResume?.education || [])}
+
+${atsAnalysis ? `ATS Context to weave in if helpful:
+- Strengths: ${JSON.stringify(atsAnalysis.strengths || [])}
+- Areas for Improvement: ${JSON.stringify(atsAnalysis.improvements || [])}` : ''}
+
+${jobMatch ? `Job Matching context to optimize alignment:
+- Match Score: ${jobMatch.overallMatch}%
+- Missing Keywords: ${JSON.stringify(jobMatch.missingKeywords || [])}
+- Matching Recommendations: ${JSON.stringify(jobMatch.recommendations || [])}` : ''}
+
+${jobDescription ? `Target Job Description:
+${jobDescription}` : ''}
+
+CRITICAL RULES:
+1. NEVER invent or fabricate any work experience, projects, skills, education, or credentials. Only use real information provided in the resume context.
+2. Weave in the company and position naturally.
+3. Highlight relevant skills and projects matching the job description/role.
+4. Ensure a strong opening hook and professional call-to-action closing.
+5. Do NOT include markdown tags around the returned letter. It will be displayed directly.
+6. Provide a professional header format if appropriate (e.g. including Date, Hiring Manager/Company info). Use placeholder or clean lines for contact info (e.g., [Applicant Name], [Email], [Phone] or actual contact info if available in the resume. Note: If the resume contains applicant contact details like name, email, phone, use them. Otherwise, use placeholders like [Your Name], [Your Email], [Your Phone]).
+
+You MUST follow the JSON schema. Return only the cover letter content.`;
+
+  let attempts = 0;
+  while (attempts < 2) {
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'OBJECT',
+            properties: {
+              coverLetter: { type: 'STRING' }
+            },
+            required: ['coverLetter']
+          }
+        }
+      });
+
+      const parsed = JSON.parse(response.text);
+      if (!parsed.coverLetter) {
+        throw new Error('Invalid JSON structure returned by Gemini API');
+      }
+
+      return parsed.coverLetter;
+    } catch (error) {
+      attempts++;
+      console.error(`Attempt ${attempts} failed to generate cover letter:`, error.message);
+      if (attempts >= 2) {
+        throw error;
+      }
+    }
+  }
+};
+
 module.exports = {
   generateSuggestions,
   generateJobMatchSuggestions,
   generateInterviewQuestions,
   evaluateInterviewAnswers,
   generateResumeComparison,
+  generateCoverLetter,
 };
 
 

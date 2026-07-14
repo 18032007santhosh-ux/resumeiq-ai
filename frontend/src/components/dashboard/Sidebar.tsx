@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, History, Settings, LogOut, X, Briefcase, Sparkles, MessageSquare, GitCompare, Compass } from 'lucide-react';
+import { LayoutDashboard, FileText, History, Settings, LogOut, X, Briefcase, Sparkles, MessageSquare, GitCompare, Compass, Mail } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { CareerProgress } from './CareerProgress';
@@ -15,6 +15,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const navItems = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'My Resumes', path: '/dashboard/resumes', icon: FileText },
+    { name: 'Cover Letter', path: '/cover-letter', icon: Mail },
     { name: 'Job Matching', path: '/job-match', icon: Briefcase },
     { name: 'Resume Comparison', path: '/compare', icon: GitCompare },
     { name: 'Mock Interviews', path: '/interview', icon: Sparkles },
