@@ -6,6 +6,7 @@ import { StatsCards } from '../components/dashboard/StatsCards';
 import { UploadCard } from '../components/dashboard/UploadCard';
 import { RecentAnalyses } from '../components/dashboard/RecentAnalyses';
 import { MockInterviewsCard } from '../components/dashboard/MockInterviewsCard';
+import { CareerCoachCard } from '../components/dashboard/CareerCoachCard';
 import { CareerTip } from '../components/dashboard/CareerTip';
 import { FutureFeatures } from '../components/dashboard/FutureFeatures';
 
@@ -38,6 +39,7 @@ export const Dashboard: React.FC = () => {
               <UploadCard />
               <RecentAnalyses />
               <MockInterviewsCard />
+              <CareerCoachCard />
               
               {/* Career Tip spans both columns on large screens */}
               <CareerTip />

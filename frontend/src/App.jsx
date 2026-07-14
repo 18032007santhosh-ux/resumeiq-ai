@@ -21,6 +21,7 @@ import { InterviewHistory } from './pages/InterviewHistory';
 import { InterviewResult } from './pages/InterviewResult';
 import { Compare } from './pages/Compare';
 import Results from './pages/dashboard/Results';
+import { CareerCoach } from './pages/CareerCoach';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -162,6 +163,14 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <Settings />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/career-coach" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <CareerCoach />
                 </ProtectedRoute>
               } 
             />
