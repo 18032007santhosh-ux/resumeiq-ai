@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const authRoutes = require('./routes/authRoutes');
 const resumeRoutes = require('./routes/resumeRoutes');
@@ -13,8 +15,27 @@ const comparisonRoutes = require('./routes/comparisonRoutes');
 const careerRoutes = require('./routes/careerRoutes');
 const coverLetterRoutes = require('./routes/coverLetterRoutes');
 const githubRoutes = require('./routes/github');
+const dashboardRoutes = require('./routes/dashboardRoutes');
 
 const app = express();
+
+// Secure Express headers with Helmet
+app.use(helmet());
+
+// Rate limiting configurations
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // Limit each IP to 200 requests per windowMs
+  message: {
+    status: 'error',
+    message: 'Too many requests from this IP, please try again after 15 minutes.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
+
+// Apply rate limiter to all API routes
+app.use('/api/', limiter);
 
 // Enable CORS
 const allowedOrigins = [
@@ -51,6 +72,7 @@ app.use('/api/compare', comparisonRoutes);
 app.use('/api/career', careerRoutes);
 app.use('/api/cover-letter', coverLetterRoutes);
 app.use('/api/github', githubRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 
 

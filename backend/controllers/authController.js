@@ -230,11 +230,96 @@ const logout = async (req, res, next) => {
   }
 };
 
+// @desc    Update user profile settings
+// @route   PUT /api/auth/profile
+// @access  Private
+const updateProfile = async (req, res, next) => {
+  try {
+    const { name, email } = req.body;
+    
+    // Check if email already taken by another user
+    if (email.toLowerCase() !== req.user.email.toLowerCase()) {
+      const emailTaken = await userService.findByEmail(email);
+      if (emailTaken) {
+        return res.status(400).json({
+          status: 'error',
+          message: 'Email address is already in use'
+        });
+      }
+    }
+
+    const updatedUser = await userService.updateUserProfile(req.user.id, name, email);
+    res.status(200).json({
+      status: 'success',
+      message: 'Profile updated successfully',
+      user: {
+        id: updatedUser._id,
+        name: updatedUser.fullName,
+        email: updatedUser.email,
+        createdAt: updatedUser.createdAt
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Change user password
+// @route   PUT /api/auth/password
+// @access  Private
+const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword } = req.body;
+    const user = await userService.findById(req.user.id);
+    
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Incorrect current password'
+      });
+    }
+
+    await userService.updateUserPassword(req.user.id, newPassword);
+    res.status(200).json({
+      status: 'success',
+      message: 'Password changed successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Delete user account and all data
+// @route   DELETE /api/auth/account
+// @access  Private
+const deleteAccount = async (req, res, next) => {
+  try {
+    await userService.deleteUserAccount(req.user.id);
+    
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    });
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Account and all associated data deleted successfully'
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
   forgotPassword,
   resetPassword,
   getMe,
-  logout
+  logout,
+  updateProfile,
+  changePassword,
+  deleteAccount
 };

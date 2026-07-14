@@ -26,6 +26,8 @@ import { CoverLetter } from './pages/CoverLetter';
 import { CoverLetterHistory } from './pages/CoverLetterHistory';
 import { GitHubAnalyzer } from './pages/GitHubAnalyzer';
 import { NotFound } from './pages/NotFound';
+import { ServerError } from './pages/ServerError';
+import { Unauthorized } from './pages/Unauthorized';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
 
@@ -214,6 +216,8 @@ function App() {
             {/* Static pages */}
             <Route path="/terms" element={<Terms />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/500" element={<ServerError />} />
+            <Route path="/401" element={<Unauthorized />} />
 
             {/* Fallback 404 Route */}
             <Route path="*" element={<NotFound />} />

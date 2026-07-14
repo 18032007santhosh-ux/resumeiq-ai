@@ -17,6 +17,8 @@ interface AuthContextType {
   logout: () => Promise<void>;
   forgotPassword: (email: string) => Promise<{ success: boolean; message: string }>;
   resetPassword: (password: string, token: string) => Promise<{ success: boolean; message: string }>;
+  updateUserProfile: (name: string, email: string) => Promise<{ success: boolean; message: string }>;
+  deleteUserAccount: () => Promise<{ success: boolean; message: string }>;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -144,8 +146,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const updateUserProfile = async (name: string, email: string) => {
+    try {
+      const res = await api.put('/auth/profile', { name, email });
+      const data = res.data;
+      if (data.status === 'success') {
+        setUser(data.user);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        return { success: true, message: data.message || 'Profile updated' };
+      }
+      return { success: false, message: data.message || 'Profile update failed' };
+    } catch (err: any) {
+      console.error('Frontend Profile Update Error:', err);
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
+    }
+  };
+
+  const deleteUserAccount = async () => {
+    try {
+      const res = await api.delete('/auth/account');
+      const data = res.data;
+      if (data.status === 'success') {
+        setToken(null);
+        setUser(null);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        return { success: true, message: data.message || 'Account deleted' };
+      }
+      return { success: false, message: data.message || 'Account deletion failed' };
+    } catch (err: any) {
+      console.error('Frontend Delete Account Error:', err);
+      const errMsg = err.response?.data?.message || err.message || 'Server connection failed';
+      return { success: false, message: errMsg };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, register, logout, forgotPassword, resetPassword }}>
+    <AuthContext.Provider value={{ user, token, loading, login, register, logout, forgotPassword, resetPassword, updateUserProfile, deleteUserAccount }}>
       {children}
     </AuthContext.Provider>
   );

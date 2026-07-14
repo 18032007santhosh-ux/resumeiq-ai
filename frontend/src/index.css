@@ -1911,4 +1911,48 @@ a {
     grid-template-columns: 1fr;
   }
 }
-@media print { .no-print { display: none !important; } }
+@media print {
+  .no-print,
+  nav,
+  aside,
+  header,
+  footer,
+  button,
+  a[href^="javascript:"],
+  .dashboard-sidebar,
+  .sidebar-container,
+  .navbar-container,
+  .back-button,
+  .action-row {
+    display: none !important;
+  }
+  
+  body, html, main, #root, .flex-1, .flex {
+    background: #070913 !important;
+    color: #f8fafc !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .max-w-6xl, .max-w-7xl, .max-w-\\[1400px\\] {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 2rem !important;
+  }
+
+  .grid {
+    display: grid !important;
+    gap: 1.5rem !important;
+  }
+
+  /* Keep glassmorphic look but make print-friendly */
+  .glass-card, .bg-slate-900, .bg-slate-900\/40 {
+    background: rgba(13, 18, 38, 0.9) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    page-break-inside: avoid;
+  }
+}
