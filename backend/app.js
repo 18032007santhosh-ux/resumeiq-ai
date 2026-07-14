@@ -9,6 +9,7 @@ const parserRoutes = require('./routes/parserRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
 const jobMatcherRoutes = require('./routes/jobMatcherRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
+const comparisonRoutes = require('./routes/comparisonRoutes');
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use('/api/resume', parserRoutes);
 app.use('/api/analysis', analysisRoutes);
 app.use('/api/job', jobMatcherRoutes);
 app.use('/api/interview', interviewRoutes);
+app.use('/api/compare', comparisonRoutes);
 
 
 

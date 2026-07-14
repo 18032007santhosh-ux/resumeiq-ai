@@ -19,6 +19,7 @@ import { JobMatch } from './pages/JobMatch';
 import { Interview } from './pages/Interview';
 import { InterviewHistory } from './pages/InterviewHistory';
 import { InterviewResult } from './pages/InterviewResult';
+import { Compare } from './pages/Compare';
 import Results from './pages/dashboard/Results';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
@@ -129,6 +130,22 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <InterviewResult />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/compare" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Compare />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/compare/:id" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <Compare />
                 </ProtectedRoute>
               } 
             />

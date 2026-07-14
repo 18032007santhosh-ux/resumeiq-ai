@@ -346,11 +346,98 @@ Instructions:
   }
 };
 
+/**
+ * Generate AI-powered comparison summary explaining improvements between two resume versions.
+ */
+const generateResumeComparison = async (resume1Data, resume2Data, diffData) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY environment variable is not set');
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  const prompt = `You are a professional resume writer and career coach.
+Analyze the differences between two versions of a candidate's resume (Version 1 and Version 2) to summarize improvements and remaining weaknesses.
+
+Version 1 Data:
+\${JSON.stringify({
+  title: resume1Data.resumeTitle,
+  score: resume1Data.atsScore,
+  summary: resume1Data.parsedData?.summary || '',
+  skills: resume1Data.parsedData?.skills || [],
+  experience: resume1Data.parsedData?.experience || [],
+  projects: resume1Data.parsedData?.projects || [],
+  education: resume1Data.parsedData?.education || [],
+  certifications: resume1Data.parsedData?.certifications || [],
+}, null, 2)}
+
+Version 2 Data:
+\${JSON.stringify({
+  title: resume2Data.resumeTitle,
+  score: resume2Data.atsScore,
+  summary: resume2Data.parsedData?.summary || '',
+  skills: resume2Data.parsedData?.skills || [],
+  experience: resume2Data.parsedData?.experience || [],
+  projects: resume2Data.parsedData?.projects || [],
+  education: resume2Data.parsedData?.education || [],
+  certifications: resume2Data.parsedData?.certifications || [],
+}, null, 2)}
+
+Statistical/Structural Diffs:
+\${JSON.stringify(diffData, null, 2)}
+
+Based on this information, provide:
+1. An overall summary explaining the improvements made in Version 2 compared to Version 1.
+2. Specific details on what got improved (e.g. better experience formatting, new skills, clearer summaries).
+3. Remaining weaknesses in Version 2 that still need attention.
+4. Action items (next steps) to make Version 2 even better.
+
+You MUST follow the schema. Do not write any markdown or HTML.`;
+
+  let attempts = 0;
+  while (attempts < 2) {
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'OBJECT',
+            properties: {
+              overallSummary: { type: 'STRING' },
+              improvements: { type: 'ARRAY', items: { type: 'STRING' } },
+              weaknesses: { type: 'ARRAY', items: { type: 'STRING' } },
+              actionItems: { type: 'ARRAY', items: { type: 'STRING' } },
+            },
+            required: ['overallSummary', 'improvements', 'weaknesses', 'actionItems'],
+          }
+        }
+      });
+
+      const parsed = JSON.parse(response.text);
+      if (!parsed.overallSummary || !Array.isArray(parsed.improvements) || !Array.isArray(parsed.weaknesses) || !Array.isArray(parsed.actionItems)) {
+        throw new Error('Invalid JSON structure returned by Gemini API for resume comparison');
+      }
+
+      return parsed;
+    } catch (error) {
+      attempts++;
+      console.error(`Attempt \${attempts} failed to generate resume comparison:`, error.message);
+      if (attempts >= 2) {
+        throw error;
+      }
+    }
+  }
+};
+
 module.exports = {
   generateSuggestions,
   generateJobMatchSuggestions,
   generateInterviewQuestions,
   evaluateInterviewAnswers,
+  generateResumeComparison,
 };
 
 
