@@ -24,6 +24,7 @@ import Results from './pages/dashboard/Results';
 import { CareerCoach } from './pages/CareerCoach';
 import { CoverLetter } from './pages/CoverLetter';
 import { CoverLetterHistory } from './pages/CoverLetterHistory';
+import { GitHubAnalyzer } from './pages/GitHubAnalyzer';
 import { NotFound } from './pages/NotFound';
 import { Terms } from './pages/Terms';
 import { Privacy } from './pages/Privacy';
@@ -189,6 +190,14 @@ function App() {
               element={
                 <ProtectedRoute requireAuth={true}>
                   <CoverLetterHistory />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/dashboard/github-analyzer" 
+              element={
+                <ProtectedRoute requireAuth={true}>
+                  <GitHubAnalyzer />
                 </ProtectedRoute>
               } 
             />

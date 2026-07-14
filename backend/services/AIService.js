@@ -529,6 +529,103 @@ You MUST follow the JSON schema. Return only the cover letter content.`;
   }
 };
 
+/**
+ * Analyze a candidate's GitHub portfolio alongside their resume details and ATS/Job Match context.
+ */
+const analyzeGitHubPortfolio = async ({
+  parsedResume,
+  atsAnalysis = null,
+  jobMatch = null,
+  profile,
+  statistics,
+}) => {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('GEMINI_API_KEY environment variable is not set');
+  }
+
+  const ai = new GoogleGenAI({ apiKey });
+
+  const prompt = `You are a professional technical recruiter and engineering manager.
+Analyze the candidate's GitHub profile and repository statistics alongside their resume data to evaluate portfolio quality and consistency.
+
+Resume / Candidate Context:
+- Parsed Resume: ${JSON.stringify(parsedResume, null, 2)}
+- ATS Analysis: ${JSON.stringify(atsAnalysis, null, 2)}
+- Job Match Analysis: ${JSON.stringify(jobMatch, null, 2)}
+
+GitHub Portfolio Context:
+- Profile Info: ${JSON.stringify(profile, null, 2)}
+- Repository Statistics: ${JSON.stringify(statistics, null, 2)}
+
+Instructions:
+1. Evaluate consistency between projects mentioned in the resume and those present on GitHub (e.g. projects listed on resume but missing on GitHub, and vice versa).
+2. Look for missing skills/technologies mentioned in the resume that are not visible in GitHub repositories.
+3. Assess repository quality, including availability of README files, documentation quality, project descriptions, and last active dates.
+4. Calculate scores (0-100) for overall portfolio, GitHub content quality, and consistency with resume.
+5. Provide actionable, specific improvements for both the resume and the GitHub profile.
+6. You MUST follow the JSON schema exactly. Do not write any markdown, HTML, or extra text outside the JSON response.`;
+
+  let attempts = 0;
+  while (attempts < 2) {
+    try {
+      const response = await ai.models.generateContent({
+        model: 'gemini-2.5-flash',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: 'OBJECT',
+            properties: {
+              overallScore: { type: 'INTEGER' },
+              githubScore: { type: 'INTEGER' },
+              resumeConsistency: { type: 'INTEGER' },
+              strengths: { type: 'ARRAY', items: { type: 'STRING' } },
+              weaknesses: { type: 'ARRAY', items: { type: 'STRING' } },
+              recommendations: { type: 'ARRAY', items: { type: 'STRING' } },
+              missingProjects: { type: 'ARRAY', items: { type: 'STRING' } },
+              missingSkills: { type: 'ARRAY', items: { type: 'STRING' } }
+            },
+            required: [
+              'overallScore',
+              'githubScore',
+              'resumeConsistency',
+              'strengths',
+              'weaknesses',
+              'recommendations',
+              'missingProjects',
+              'missingSkills'
+            ]
+          }
+        }
+      });
+
+      const parsed = JSON.parse(response.text);
+      
+      if (
+        typeof parsed.overallScore !== 'number' ||
+        typeof parsed.githubScore !== 'number' ||
+        typeof parsed.resumeConsistency !== 'number' ||
+        !Array.isArray(parsed.strengths) ||
+        !Array.isArray(parsed.weaknesses) ||
+        !Array.isArray(parsed.recommendations) ||
+        !Array.isArray(parsed.missingProjects) ||
+        !Array.isArray(parsed.missingSkills)
+      ) {
+        throw new Error('Invalid JSON structure returned by Gemini API for GitHub Analysis');
+      }
+
+      return parsed;
+    } catch (error) {
+      attempts++;
+      console.error(`Attempt ${attempts} failed to analyze GitHub portfolio:`, error.message);
+      if (attempts >= 2) {
+        throw error;
+      }
+    }
+  }
+};
+
 module.exports = {
   generateSuggestions,
   generateJobMatchSuggestions,
@@ -536,6 +633,7 @@ module.exports = {
   evaluateInterviewAnswers,
   generateResumeComparison,
   generateCoverLetter,
+  analyzeGitHubPortfolio,
 };
 
 

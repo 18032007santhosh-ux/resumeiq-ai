@@ -12,6 +12,7 @@ const interviewRoutes = require('./routes/interviewRoutes');
 const comparisonRoutes = require('./routes/comparisonRoutes');
 const careerRoutes = require('./routes/careerRoutes');
 const coverLetterRoutes = require('./routes/coverLetterRoutes');
+const githubRoutes = require('./routes/github');
 
 const app = express();
 
@@ -49,6 +50,7 @@ app.use('/api/interview', interviewRoutes);
 app.use('/api/compare', comparisonRoutes);
 app.use('/api/career', careerRoutes);
 app.use('/api/cover-letter', coverLetterRoutes);
+app.use('/api/github', githubRoutes);
 
 
 
