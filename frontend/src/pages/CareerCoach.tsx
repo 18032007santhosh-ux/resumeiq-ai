@@ -378,7 +378,7 @@ export const CareerCoach: React.FC = () => {
                       <button
                         key={idx}
                         onClick={() => handleSendMessage(q.text)}
-                        className="group flex items-start justify-between p-4 bg-slate-900/30 hover:bg-indigo-500/5 border border-slate-800/80 hover:border-indigo-500/20 rounded-2xl text-left transition-all duration-350 cursor-pointer shadow-md"
+                        className="group flex items-start justify-between p-4 bg-slate-900 hover:bg-slate-800/80 border border-slate-850 hover:border-indigo-500/30 rounded-xl text-left transition-colors duration-200 cursor-pointer shadow-lg"
                       >
                         <div className="space-y-1">
                           <span className="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
