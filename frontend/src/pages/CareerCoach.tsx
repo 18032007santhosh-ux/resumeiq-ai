@@ -237,9 +237,9 @@ export const CareerCoach: React.FC = () => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       
       <div className="flex-1 flex flex-col h-full min-h-0 relative overflow-hidden bg-slate-950/50">
-        {/* Ambient background glows */}
-        <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none"></div>
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+        {/* Ambient background glows - hidden on mobile to prevent GPU rendering glitches/static lines */}
+        <div className="hidden md:block absolute top-[-10%] right-[-5%] w-[500px] h-[500px] bg-indigo-500/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div className="hidden md:block absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-purple-500/5 rounded-full blur-[120px] pointer-events-none"></div>
         
         <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
@@ -319,8 +319,8 @@ export const CareerCoach: React.FC = () => {
 
           {/* Chat main space */}
           <div className="flex-1 flex flex-col h-full min-h-0 bg-[#080b16]/30">
-            {/* Header */}
-            <div className="px-6 py-4 border-b border-slate-800/80 bg-slate-900/20 backdrop-blur-md flex items-center justify-between shrink-0">
+            {/* Header - Solid background on mobile to prevent filter glitches */}
+            <div className="px-6 py-4 border-b border-slate-800/80 bg-slate-900/95 backdrop-blur-none md:backdrop-blur-md flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                   <Compass className="w-5 h-5 text-indigo-400" />
