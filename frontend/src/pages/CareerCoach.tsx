@@ -3,7 +3,8 @@ import { Sidebar } from '../components/dashboard/Sidebar';
 import { Navbar } from '../components/dashboard/Navbar';
 import { 
   Compass, Send, Plus, Trash2, Edit2, Check, X as CloseIcon, 
-  Bot, User, Sparkles, AlertCircle, RefreshCw, ChevronRight, HelpCircle 
+  Bot, User, Sparkles, AlertCircle, RefreshCw, ChevronRight, HelpCircle,
+  History as HistoryIcon 
 } from 'lucide-react';
 import { 
   getCareerHistory, getCareerConversation, sendMessage, 
@@ -80,6 +81,7 @@ export const CareerCoach: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState('');
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -328,13 +330,22 @@ export const CareerCoach: React.FC = () => {
                   <p className="text-xs text-slate-400">Get context-aware career and ATS guidance</p>
                 </div>
               </div>
-              <button 
-                onClick={handleCreateNew}
-                className="md:hidden flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                New Chat
-              </button>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => setHistoryOpen(true)}
+                  className="md:hidden flex items-center justify-center p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 hover:text-white rounded-lg transition"
+                  title="Chat History"
+                >
+                  <HistoryIcon className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={handleCreateNew}
+                  className="md:hidden flex items-center gap-1 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  New Chat
+                </button>
+              </div>
             </div>
 
             {/* Message Area */}
@@ -491,6 +502,92 @@ export const CareerCoach: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile History Drawer overlay */}
+      {historyOpen && (
+        <div className="fixed inset-0 z-50 md:hidden flex justify-end">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            onClick={() => setHistoryOpen(false)}
+          />
+          
+          {/* Drawer Content */}
+          <div className="relative w-80 max-w-[85vw] h-full bg-[#090d1a] border-l border-slate-800/80 flex flex-col z-10 animate-fade-in shadow-2xl">
+            <div className="p-4 border-b border-slate-850 flex items-center justify-between">
+              <span className="text-sm font-semibold text-slate-400">Chat History</span>
+              <button 
+                onClick={() => setHistoryOpen(false)}
+                className="p-1 hover:bg-slate-850 rounded-lg text-slate-400 hover:text-white"
+              >
+                <CloseIcon className="w-4 h-4" />
+              </button>
+            </div>
+            
+            <div className="flex-1 overflow-y-auto p-3 space-y-1.5 custom-scrollbar">
+              {historyLoading ? (
+                <div className="flex justify-center items-center py-10">
+                  <RefreshCw className="w-5 h-5 text-indigo-400 animate-spin" />
+                </div>
+              ) : history.length === 0 ? (
+                <div className="text-center py-10 text-slate-500 text-xs">
+                  No coaching history yet.
+                </div>
+              ) : (
+                history.map((chat) => (
+                  <div
+                    key={chat._id}
+                    onClick={() => {
+                      loadConversation(chat._id);
+                      setHistoryOpen(false); // Close drawer after selection
+                    }}
+                    className={`group relative flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer ${
+                      activeSession?._id === chat._id
+                        ? 'bg-indigo-500/10 border-indigo-500/30 text-white'
+                        : 'bg-transparent border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/40'
+                    }`}
+                  >
+                    {editingId === chat._id ? (
+                      <div className="flex items-center gap-1 w-full" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="text"
+                          value={editingTitle}
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                          className="bg-slate-950 text-white text-xs px-2 py-1 rounded border border-slate-800 focus:outline-none focus:border-indigo-500 flex-1"
+                        />
+                        <button onClick={(e) => saveRename(chat._id, e)} className="p-1 text-emerald-400 hover:bg-slate-800 rounded">
+                          <Check className="w-3 h-3" />
+                        </button>
+                        <button onClick={(e) => { e.stopPropagation(); setEditingId(null); }} className="p-1 text-rose-400 hover:bg-slate-800 rounded">
+                          <CloseIcon className="w-3 h-3" />
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <span className="text-xs font-medium truncate pr-16">{chat.title}</span>
+                        <div className="absolute right-2 opacity-0 group-hover:opacity-100 flex items-center gap-1 transition-opacity">
+                          <button 
+                            onClick={(e) => startRename(chat._id, chat.title, e)}
+                            className="p-1 text-slate-400 hover:text-indigo-400 hover:bg-slate-850 rounded-lg transition"
+                          >
+                            <Edit2 className="w-3 h-3" />
+                          </button>
+                          <button 
+                            onClick={(e) => handleDelete(chat._id, e)}
+                            className="p-1 text-slate-400 hover:text-red-400 hover:bg-slate-850 rounded-lg transition"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
