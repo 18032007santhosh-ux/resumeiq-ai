@@ -1,8 +1,19 @@
 import axios from 'axios';
 
-const BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:5000/api'
-  : 'https://resumeiq-ai-cyij.onrender.com/api';
+const getBaseUrl = () => {
+  const hostname = window.location.hostname;
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return 'http://localhost:5000/api';
+  }
+  // Check if it's a local network IP address (e.g. 192.168.x.x, 10.x.x.x, 172.16-31.x.x) or a .local hostname
+  const isLocalIp = /^(127\.\d+\.\d+\.\d+|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+|172\.(1[6-9]|2\d|3[0-1])\.\d+\.\d+)$/.test(hostname) || hostname.endsWith('.local');
+  if (isLocalIp) {
+    return `http://${hostname}:5000/api`;
+  }
+  return 'https://resumeiq-ai-cyij.onrender.com/api';
+};
+
+const BASE_URL = getBaseUrl();
 
 const api = axios.create({
   baseURL: BASE_URL,
