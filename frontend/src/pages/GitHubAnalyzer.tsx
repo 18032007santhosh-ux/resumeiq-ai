@@ -262,7 +262,7 @@ ${analysis.missingSkills.map((s: string) => `- ${s}`).join('\n') || 'None'}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scrollbar">
-        <Navbar onMenuClick={() => setSidebarOpen(true)} title="GitHub Analyzer" />
+        <Navbar onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full space-y-8 print:p-0">
           
@@ -441,9 +441,9 @@ ${analysis.missingSkills.map((s: string) => `- ${s}`).join('\n') || 'None'}
                   missingSkills={analysisResult.analysis.missingSkills}
                 />
                 <RecommendationCard
-                  strengths={analysisResult.strengths}
-                  weaknesses={analysisResult.weaknesses}
-                  recommendations={analysisResult.recommendations}
+                  strengths={analysisResult.analysis?.strengths || analysisResult.strengths || []}
+                  weaknesses={analysisResult.analysis?.weaknesses || analysisResult.weaknesses || []}
+                  recommendations={analysisResult.analysis?.recommendations || analysisResult.recommendations || []}
                 />
               </div>
 
